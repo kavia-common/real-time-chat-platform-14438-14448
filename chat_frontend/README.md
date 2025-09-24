@@ -1,82 +1,49 @@
-# Lightweight React Template for KAVIA
+# React Frontend - Ocean Professional Chat
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+This is a lightweight React frontend for a Slack-like chat application with authentication, channels, and real-time messaging.
 
 ## Features
+- Authentication: Login and Signup flows
+- Channels: Sidebar with channel list
+- Chat: Messages list and input
+- Real-time: Socket.IO client for live updates
+- Theming: Ocean Professional theme with primary (#2563EB), secondary (#F59E0B), error (#EF4444), background (#f9fafb), text (#111827)
+- Responsive: Adaptive sidebar and content layout
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+## Environment Variables
+Create a `.env` file in the project root (same folder as package.json) to configure endpoints:
 
-## Getting Started
-
-In the project directory, you can run:
-
-### `npm start`
-
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-### `npm test`
-
-Launches the test runner in interactive watch mode.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-## Customization
-
-### Colors
-
-The main brand colors are defined as CSS variables in `src/App.css`:
-
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
+```
+REACT_APP_API_BASE=http://localhost:8000
+REACT_APP_WS_BASE=http://localhost:8000
 ```
 
-### Components
+These are required for REST and WebSocket connectivity. The orchestrator should set them for deployment.
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+## Scripts
+- `npm start` - start dev server
+- `npm run build` - production build
+- `npm test` - run tests
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+## Structure
+- `src/auth` - Auth context and pages
+- `src/chat` - Chat layout and components
+- `src/services` - API and Socket services
+- `src/theme.js` - Theme application
 
-## Learn More
+## Backend Contracts
+Expected endpoints (FastAPI recommended):
+- `POST /auth/login` -> `{ token, user }`
+- `POST /auth/signup` -> `{ token, user }`
+- `GET /channels` -> `[{ id, name, description? }]`
+- `GET /channels/:id/messages` -> `[{ id, content, user: { id, name }, createdAt }]`
+- `POST /channels/:id/messages` -> `{ id, content, user, createdAt }`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Socket.IO events:
+- client emits: `join` with `{ channelId }`
+- server emits: `message:new` with `{ channelId, message }`
 
-### Code Splitting
+Adjust names to match your backend if different.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Styling
+The Ocean Professional theme is applied via CSS variables and `applyTheme()` in `src/theme.js`. The UI uses a minimalist, modern layout with rounded corners, subtle shadows, and gradients.
